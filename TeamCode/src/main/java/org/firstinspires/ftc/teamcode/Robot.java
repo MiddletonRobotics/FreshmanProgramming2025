@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+
 @Autonomous(name="heuihfieuwhfiuewhfiues")
 public class Robot extends OpMode {
     private DcMotor frontLeft;
@@ -53,6 +55,10 @@ public class Robot extends OpMode {
         double forward = gamepad1.left_stick_y;
         double strafe = -gamepad1.left_stick_x;
         double rotation = gamepad1.right_stick_x;
+
+        telemetry.addData("Current Position", currentPosition);
+        telemetry.addData("Target Position", targetPosition);
+        telemetry.update();
 
         double[] speeds = new double[] {
                 (forward + rotation + strafe),
