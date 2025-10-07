@@ -13,6 +13,7 @@ import com.seattlesolvers.solverslib.controller.wpilibcontroller.SimpleMotorFeed
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 import org.firstinspires.ftc.teamcode.constants.IntakeConstants;
+import org.firstinspires.ftc.teamcode.utilties.BallType;
 
 public class Intake extends SubsystemBase {
     private Motor intakeMotor;
@@ -27,33 +28,6 @@ public class Intake extends SubsystemBase {
     private SimpleMotorFeedforward feedforward;
 
     private double intakeGearRatio;
-
-    public enum BallType {
-        PURPLE(123,102,194),
-        GREEN(0,0,0);
-
-        final int r;
-        final int g;
-        final int b;
-
-        BallType(int r, int g, int b) {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-        }
-
-        public int getR() {
-            return r;
-        }
-
-        public int getG() {
-            return g;
-        }
-
-        public int getB() {
-            return b;
-        }
-    }
 
     private static Intake instance;
     public static synchronized Intake getInstance(HardwareMap hMap, TelemetryManager telemetryManager) {

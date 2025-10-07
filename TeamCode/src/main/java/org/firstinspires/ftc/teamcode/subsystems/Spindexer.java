@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.ServoEx;
 
 import org.firstinspires.ftc.teamcode.constants.SpindexerConstants;
+import org.firstinspires.ftc.teamcode.utilties.BallType;
 
 public class Spindexer extends SubsystemBase {
     private ServoEx rotationServo;
@@ -46,6 +47,30 @@ public class Spindexer extends SubsystemBase {
         leftHomingSwitch = hMap.get(TouchSensor.class, SpindexerConstants.kLeftHomingSwitch);
 
         this.telemetryManager = telemetryManager;
+    }
+
+    public boolean isBallPurple(RevColorSensorV3 colorSensor) {
+        int red = colorSensor.red();
+        int green = colorSensor.green();
+        int blue = colorSensor.blue();
+
+        return (Math.abs(red - BallType.PURPLE.getR()) <= 10) || (Math.abs(green - BallType.PURPLE.getG()) <= 10) || (Math.abs(blue - BallType.PURPLE.getB()) <= 10);
+    }
+
+    public boolean isBallPresent(RevColorSensorV3 colorSensor) {
+        int red = colorSensor.red();
+        int green = colorSensor.green();
+        int blue = colorSensor.blue();
+
+        return red == 0 && green == 0 && blue == 0;
+    }
+
+    public boolean isRightSwitchTriggered() {
+        return rightHomingSwitch.isPressed();
+    }
+
+    public boolean isLeftSwitchTriggered() {
+        return leftHomingSwitch.isPressed();
     }
 
     @Override
