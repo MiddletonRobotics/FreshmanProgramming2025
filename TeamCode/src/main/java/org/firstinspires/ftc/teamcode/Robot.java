@@ -20,12 +20,14 @@ public class Robot extends OpMode {
 
     private DcMotor elevatorMotor;
     private RevTouchSensor homingSwitch;
+    private Drivetrain drivetrain;
     private PIDFController pidController;
 
     double targetPosition = 0;
 
     @Override
     public void init() {
+        drivetrain = Drivetrain.getInstance(hardwareMap);
         frontLeft = hardwareMap.get(DcMotor.class, "fl");
         frontRight = hardwareMap.get(DcMotor.class, "fr");
         backLeft = hardwareMap.get(DcMotor.class, "bl");
