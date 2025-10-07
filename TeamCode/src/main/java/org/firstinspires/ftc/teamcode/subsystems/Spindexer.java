@@ -9,12 +9,14 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.ServoEx;
 
+import org.firstinspires.ftc.library.geometry.Rotation2d;
+import org.firstinspires.ftc.library.hardware.AnalogEncoder;
 import org.firstinspires.ftc.teamcode.constants.SpindexerConstants;
 import org.firstinspires.ftc.teamcode.utilties.BallType;
 
 public class Spindexer extends SubsystemBase {
     private ServoEx rotationServo;
-    private AnalogInput rotationEncoder;
+    private AnalogEncoder rotationEncoder;
 
     private RevColorSensorV3 colorSlot0;
     private RevColorSensorV3 colorSlot1;
@@ -37,7 +39,7 @@ public class Spindexer extends SubsystemBase {
 
     private Spindexer(HardwareMap hMap, TelemetryManager telemetryManager) {
         rotationServo = new ServoEx(hMap, SpindexerConstants.kRotationServoID);
-        rotationEncoder = hMap.get(AnalogInput.class, SpindexerConstants.kRotationServoEncoderID);
+        rotationEncoder = new AnalogEncoder(hMap, SpindexerConstants.kRotationServoEncoderID);
 
         colorSlot0 = hMap.get(RevColorSensorV3.class, SpindexerConstants.kSlot0ColorSensor);
         colorSlot1 = hMap.get(RevColorSensorV3.class, SpindexerConstants.kSlot1ColorSensor);
@@ -71,6 +73,46 @@ public class Spindexer extends SubsystemBase {
 
     public boolean isLeftSwitchTriggered() {
         return leftHomingSwitch.isPressed();
+    }
+
+    public Rotation2d getServoEncoderPosition() {
+        return rotationEncoder.getAngle();
+    }
+
+    public void setPosition(double position) {
+        rotationServo.set(position);
+    }
+
+    public void toIntakingPosition(int slotNumber) {
+        switch (slotNumber) {
+            case 0:
+                rotationServo.set(SpindexerConstants.kSlot0LoadingPosition);
+                break;
+            case 1:
+                rotationServo.set(SpindexerConstants.kSlot1LoadingPosition);
+                break;
+            case 2:
+                rotationServo.set(SpindexerConstants.kSlot2LoadingPosition);
+                break;
+            default:
+                throw new RuntimeException("Invalid slot number");
+        }
+    }
+
+    public void toOuttakingPosition(int slotNumber) {
+        switch (slotNumber) {
+            case 0:
+                rotationServo.set(SpindexerConstants.kSlot0ShootingPosition);
+                break;
+            case 1:
+                rotationServo.set(SpindexerConstants.kSlot1ShootingPosition);
+                break;
+            case 2:
+                rotationServo.set(SpindexerConstants.kSlot2ShootingPosition);
+                break;
+            default:
+                throw new RuntimeException("Invalid slot number");
+        }
     }
 
     @Override
