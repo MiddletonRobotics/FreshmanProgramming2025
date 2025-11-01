@@ -7,9 +7,11 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
+import org.firstinspires.ftc.library.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 public class Drivetrain extends SubsystemBase {
@@ -19,6 +21,40 @@ public class Drivetrain extends SubsystemBase {
     private MotorEx backRight;
 
     private Follower follower;
+
+    public enum WantedState {
+        TELEOP_DRIVE,
+        PEDROPATHING_PATH,
+        ROTATION_LOCK,
+        DRIVE_TO_POINT,
+        ON_THE_FLY,
+        IDLE
+    }
+
+    private enum SystemState {
+        TELEOP_DRIVE,
+        PEDROPATHING_PATH,
+        ROTATION_LOCK,
+        DRIVE_TO_POINT,
+        ON_THE_FLY,
+        IDLE
+    }
+
+    private WantedState wantedState = WantedState.TELEOP_DRIVE;
+    private SystemState systemState = SystemState.TELEOP_DRIVE;
+
+    private final PIDFController headingController;
+    private final PIDFController teleopDriveToPointController;
+    private final PIDFController autonomousDriveToPointController;
+
+    private double desiredHeadingRadians;
+    private double maxVelocityOutputForDriveToPoint;
+    private Pose2d desiredPoseForDriveToPoint = new Pose2d();
+
+    private double forward = 0.0;
+    private double strafe = 0.0;
+    private double rotation = 0.0;
+    private boolean robotCentric = false;
 
     @IgnoreConfigurable
     static TelemetryManager telemetryManager;
@@ -40,6 +76,10 @@ public class Drivetrain extends SubsystemBase {
 
         follower = Constants.createFollower(hMap);
         follower.setStartingPose(new Pose(0,0,0));
+
+        this.headingController = new PIDFController(0.01, 0, 0, 0);
+        this.teleopDriveToPointController = new PIDFController(0.01, 0, 0, 0);
+        this.autonomousDriveToPointController = new PIDFController(0.01, 0, 0, 0);
 
         this.telemetryManager = telemetryManager;
     }
