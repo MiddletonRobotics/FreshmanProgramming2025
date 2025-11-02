@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.ServoEx;
+import com.seattlesolvers.solverslib.hardware.motors.CRServoEx;
 
 import org.firstinspires.ftc.library.geometry.Rotation2d;
 import org.firstinspires.ftc.library.hardware.AnalogEncoder;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.constants.SpindexerConstants;
 import org.firstinspires.ftc.teamcode.utilties.BallType;
 
 public class Spindexer extends SubsystemBase {
-    private ServoEx rotationServo;
+    private CRServoEx rotationServo;
     private AnalogEncoder rotationEncoder;
 
     private RevColorSensorV3 colorSlot0;
@@ -29,7 +30,7 @@ public class Spindexer extends SubsystemBase {
     static TelemetryManager telemetryManager;
 
     private static Spindexer instance;
-    private static synchronized Spindexer getInstance(HardwareMap hMap, TelemetryManager telemetryManager) {
+    public static synchronized Spindexer getInstance(HardwareMap hMap, TelemetryManager telemetryManager) {
         if (instance == null) {
             instance = new Spindexer(hMap, telemetryManager);
         }
@@ -38,7 +39,7 @@ public class Spindexer extends SubsystemBase {
     }
 
     private Spindexer(HardwareMap hMap, TelemetryManager telemetryManager) {
-        rotationServo = new ServoEx(hMap, SpindexerConstants.kRotationServoID);
+        rotationServo = new CRServoEx(hMap, SpindexerConstants.kRotationServoID);
         rotationEncoder = new AnalogEncoder(hMap, SpindexerConstants.kRotationServoEncoderID);
 
         colorSlot0 = hMap.get(RevColorSensorV3.class, SpindexerConstants.kSlot0ColorSensor);
@@ -79,7 +80,7 @@ public class Spindexer extends SubsystemBase {
         return rotationEncoder.getAngle();
     }
 
-    public void setPosition(double position) {
+    public void setSpeed(double position) {
         rotationServo.set(position);
     }
 
